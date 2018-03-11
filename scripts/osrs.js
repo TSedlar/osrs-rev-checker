@@ -52,7 +52,7 @@ module.exports = {
       http.get(OLDSCHOOL_PACK, (response) => {
         response.pipe(upload)
       }).on('error', (err) => reject(err))
-      upload.on('finish', () => resolve(`${REMOTE_JAR}${target}`))
+      upload.on('finish', () => resolve(`${REMOTE_JAR}${rev}.jar`))
     })
   }
 }
