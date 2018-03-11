@@ -1,4 +1,5 @@
 const osrs = require('../scripts/osrs')
+const Socket = require('net').Socket
 const Datastore = require('@google-cloud/datastore')
 
 let ds = Datastore()
@@ -36,6 +37,7 @@ module.exports = (event, callback) => {
             for (let sub of subscribers) {
               promises.push(sendUpdate(sub, current))
             }
+            promises.push(osrs.downloadAndStore(current))
             ds.save({
               key: ds.key(['Revision', 'latest']),
               data: { number: current }

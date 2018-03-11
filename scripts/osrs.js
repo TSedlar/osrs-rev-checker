@@ -1,5 +1,10 @@
 const Socket = require('net').Socket
 const struct = require('bufferpack')
+const http = require('http')
+const store = require('@google-cloud/storage')({ projectId: 'osrs-rev-checker' })
+
+const OLDSCHOOL_PACK = 'http://oldschool1.runescape.com/gamepack.jar'
+const REMOTE_JAR = 'http://storage.googleapis.com/osrs-jars/'
 
 /**
 * A function that gets the latest revision number of OSRS
@@ -36,6 +41,18 @@ module.exports = {
       }
 
       writePacket()
+    })
+  },
+  downloadAndStore: (rev) => {
+    return new Promise((resolve, reject) => {
+      let upload = store.bucket('osrs-jars').file(`${rev}.jar`)
+        .createWriteStream({
+          metadata: { contentType: 'application/octet-stream' }
+        })
+      http.get(OLDSCHOOL_PACK, (response) => {
+        response.pipe(upload)
+      }).on('error', (err) => reject(err))
+      upload.on('finish', () => resolve(`${REMOTE_JAR}${target}`))
     })
   }
 }

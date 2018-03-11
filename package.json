@@ -6,6 +6,7 @@
   "main": "index.js",
   "dependencies": {
     "@google-cloud/datastore": "^1.3.5",
+    "@google-cloud/storage": "^1.6.0",
     "bufferpack": "0.0.6"
   }
 }
